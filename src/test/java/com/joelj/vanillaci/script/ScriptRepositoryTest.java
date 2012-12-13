@@ -12,6 +12,7 @@ import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * User: Joel Johnson
@@ -80,5 +81,17 @@ public class ScriptRepositoryTest {
 		File mainFile = new File(scriptDir, "main");
 		Assert.assertTrue(mainFile.exists(), "Script main exists");
 		Assert.assertTrue(mainFile.isFile(), "Script main is file");
+	}
+
+	@Test
+	public void getScripts() {
+		ScriptRepository scriptRepository = new ScriptRepository(demoRepoDirectory);
+		List<ScriptName> scripts = scriptRepository.getScripts();
+		Assert.assertEquals(scripts.size(), 3, "Expected to have given number of scripts. Perhaps a test script was added?");
+		Assert.assertTrue(scripts.contains(new ScriptName("environment", "123")), "environment-123");
+		Assert.assertTrue(scripts.contains(new ScriptName("exitCode", "1")), "exitCode-1");
+		Assert.assertTrue(scripts.contains(new ScriptName("simple", "e3115ca80f0e206ae4cf342a953005ccf2f4bcef")), "simple-e311...");
+//		Assert.assertTrue(scripts.contains(new ScriptName("nested/nested", "1")), "nested/nested-1"); //TODO
+		System.out.println();
 	}
 }

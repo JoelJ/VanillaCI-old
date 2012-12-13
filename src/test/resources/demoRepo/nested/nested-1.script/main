@@ -1,0 +1,5 @@
+#!/bin/sh
+OLD_EXIT_CODE=$EXIT_CODE
+let EXIT_CODE+=1
+echo "EXIT_CODE=$EXIT_CODE" > __results
+exit $OLD_EXIT_CODE

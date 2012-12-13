@@ -1,14 +1,14 @@
 package com.joelj.vanillaci.script;
 
+import com.google.common.collect.ImmutableList;
 import com.joelj.vanillaci.exceptions.ScriptNotFoundException;
 import com.joelj.vanillaci.util.Confirm;
 import com.joelj.vanillaci.util.HashUtils;
 import com.joelj.vanillaci.util.TarUtils;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.text.MessageFormat;
+import java.util.List;
 
 /**
  * Represents a repository of scripts.
@@ -36,7 +36,7 @@ public class ScriptRepository {
 	 * @throws java.io.FileNotFoundException thrown if the given file doesn't exist.
 	 * @throws java.io.IOException Thrown if the file couldn't be copied or the directory structure of the destination couldn't be created.
 	 */
-	public boolean addScript(String name, String hash, File file) throws FileNotFoundException, IOException {
+	public boolean addScript(String name, String hash, File file) throws IOException {
 		boolean result;
 		Confirm.notNull("name", name);
 		Confirm.notNull("hash", hash);
@@ -105,5 +105,30 @@ public class ScriptRepository {
 
 	private String generateScriptName(String name, String hash) {
 		return name + "-" + hash + ".script";
+	}
+
+	public List<ScriptName> getScripts() {
+		ImmutableList.Builder<ScriptName> builder = ImmutableList.builder();
+		String repoPath = repositoryDirectory.getAbsolutePath();
+
+		File[] files = repositoryDirectory.listFiles(new FileFilter() {
+			@Override
+			public boolean accept(File file) {
+				return file.isDirectory() && file.getName().endsWith(".script");
+			}
+		}); //TODO: make recursive
+
+		for (File file : files) {
+			if(file.isDirectory()) {
+				String filePath = file.getAbsolutePath();
+				String fileName = filePath.substring(repoPath.length()+1, filePath.length() - ".script".length());
+
+				int dashIndex = fileName.lastIndexOf("-");
+				String scriptName = fileName.substring(0, dashIndex);
+				String hash = fileName.substring(dashIndex+1);
+				builder.add(new ScriptName(scriptName, hash));
+			}
+		}
+		return builder.build();
 	}
 }
