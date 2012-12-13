@@ -22,9 +22,7 @@ public abstract class BaseServlet extends HttpServlet {
 	protected abstract String getUrlEndPoint();
 
 	private ServiceResponse process(HttpServletRequest request, HttpServletResponse response, HttpMethod httpMethod) throws IOException {
-		String url = request.getPathInfo().substring(getUrlEndPoint().length());
-		int index = url.indexOf("/");
-		String name = url.substring(0, index);
+		String name = request.getPathInfo();
 
 		Method[] declaredMethods = this.getClass().getDeclaredMethods();
 		for (Method declaredMethod : declaredMethods) {
@@ -36,6 +34,7 @@ public abstract class BaseServlet extends HttpServlet {
 							if(supportedHttpMethod == httpMethod) {
 								Object result = declaredMethod.invoke(this, request, response);
 								if(result != null) {
+									response.getOutputStream().print(((ServiceResponse)result).toJson().toString());
 									return (ServiceResponse) result;
 								} else {
 									response.setStatus(500);
