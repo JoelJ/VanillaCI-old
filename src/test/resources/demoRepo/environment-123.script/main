@@ -1,0 +1,10 @@
+#!/bin/sh
+
+echo "$SCRIPT_ROOT"
+echo "$SCRIPT_NAME"
+echo "$SCRIPT_WORKSPACE"
+
+echo "$SOME_INJECTED_VALUE"
+echo "$USER"
+
+exit 1

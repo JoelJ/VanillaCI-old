@@ -1,0 +1,5 @@
+#!/bin/sh
+
+echo "Hello $1"
+echo "Your birthday is on $2" 1>&2
+
