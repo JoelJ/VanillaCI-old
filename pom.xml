@@ -8,6 +8,9 @@
     <artifactId>VanillaCI</artifactId>
     <version>0.2</version>
 
+	<name>VanillaCI</name>
+	<packaging>war</packaging>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
