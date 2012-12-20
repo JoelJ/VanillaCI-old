@@ -1,5 +1,6 @@
 package com.joelj.vanillaci.restapi.core;
 
+import com.joelj.vanillaci.exceptions.InvalidResponseException;
 import com.joelj.vanillaci.exceptions.NullResponseException;
 import com.joelj.vanillaci.exceptions.UnboundUrlException;
 import com.joelj.vanillaci.exceptions.UnhandledException;
@@ -21,7 +22,22 @@ import java.lang.reflect.Method;
 public abstract class BaseServlet extends HttpServlet {
 	protected abstract String getUrlEndPoint();
 
-	private ServiceResponse process(HttpServletRequest request, HttpServletResponse response, HttpMethod httpMethod) throws IOException {
+	private void process(HttpServletRequest request, HttpServletResponse response, HttpMethod httpMethod) throws IOException {
+		int defaultStatus = response.getStatus();
+		try {
+			ServiceResponse serviceResponse = processRequest(request, response, httpMethod);
+			handleResponse(request, response, serviceResponse);
+		} catch (Exception e) {
+			//If the response Status hasn't been set yet
+			if(response.getStatus() != defaultStatus) {
+				response.setStatus(500);
+			}
+			ServiceResponse serviceResponse = new ServiceResponse(e);
+			handleResponse(request, response, serviceResponse);
+		}
+	}
+
+	private ServiceResponse processRequest(HttpServletRequest request, HttpServletResponse response, HttpMethod httpMethod) throws IOException {
 		String name = request.getPathInfo();
 
 		Method[] declaredMethods = this.getClass().getDeclaredMethods();
@@ -34,8 +50,12 @@ public abstract class BaseServlet extends HttpServlet {
 							if(supportedHttpMethod == httpMethod) {
 								Object result = declaredMethod.invoke(this, request, response);
 								if(result != null) {
-									response.getOutputStream().print(((ServiceResponse)result).toJson().toString());
-									return (ServiceResponse) result;
+									if(result instanceof ServiceResponse) {
+										return (ServiceResponse) result;
+									} else {
+										response.setStatus(500);
+										throw new InvalidResponseException(ServiceResponse.class, result.getClass());
+									}
 								} else {
 									response.setStatus(500);
 									throw new NullResponseException(request.getPathInfo(), httpMethod);
@@ -52,6 +72,12 @@ public abstract class BaseServlet extends HttpServlet {
 		}
 		response.setStatus(404);
 		throw new UnboundUrlException(request.getPathInfo(), httpMethod);
+	}
+
+	private void handleResponse(HttpServletRequest request, HttpServletResponse response, ServiceResponse result) throws IOException {
+		//TODO: support XML and CSV
+
+		result.writeJson(response.getOutputStream());
 	}
 
 	@Override

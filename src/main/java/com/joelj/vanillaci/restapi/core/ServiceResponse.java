@@ -1,11 +1,11 @@
 package com.joelj.vanillaci.restapi.core;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
+import org.codehaus.jackson.map.ObjectMapper;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -14,7 +14,7 @@ import java.util.Map;
  * Time: 10:22 PM
  */
 public class ServiceResponse {
-	private JsonElement object;
+	private Object object;
 
 	public ServiceResponse(Serializable object) {
 		this((Object)object);
@@ -29,11 +29,11 @@ public class ServiceResponse {
 	}
 
 	private ServiceResponse(Object object) {
-		Gson gson = new Gson();
-		this.object = gson.toJsonTree(object);
+		this.object = object;
 	}
 
-	public JsonElement toJson() {
-		return object;
+	public void writeJson(OutputStream outputStream) throws IOException {
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.writeValue(outputStream, this.object);
 	}
 }
