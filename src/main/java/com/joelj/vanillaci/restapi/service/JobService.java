@@ -15,18 +15,11 @@ import java.io.IOException;
  * Date: 12/12/12
  * Time: 9:40 PM
  */
-@WebServlet(urlPatterns= JobService.URL_END_POINT)
+@WebServlet(urlPatterns= "/job/*")
 public class JobService extends BaseServlet {
-	public static final String URL_END_POINT = "/job/*";
 
 	@EndPoint(value="/execute", accepts = {HttpMethod.POST})
 	public ServiceResponse execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		response.getOutputStream().println("Hello from JobService! " + request.getMethod());
-
-		return null;
-	}
-
-	protected String getUrlEndPoint() {
-		return URL_END_POINT;
+		return new ServiceResponse("Hello from JobService!");
 	}
 }

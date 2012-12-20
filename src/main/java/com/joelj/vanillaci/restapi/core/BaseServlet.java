@@ -20,8 +20,6 @@ import java.lang.reflect.Method;
  * Time: 10:08 PM
  */
 public abstract class BaseServlet extends HttpServlet {
-	protected abstract String getUrlEndPoint();
-
 	private void process(HttpServletRequest request, HttpServletResponse response, HttpMethod httpMethod) throws IOException {
 		int defaultStatus = response.getStatus();
 		try {

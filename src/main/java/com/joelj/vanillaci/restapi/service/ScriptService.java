@@ -19,9 +19,8 @@ import java.util.List;
  * Date: 12/12/12
  * Time: 10:18 PM
  */
-@WebServlet(urlPatterns = ScriptService.URL_END_POINT)
+@WebServlet(urlPatterns = "/script/*")
 public class ScriptService extends BaseServlet {
-	public static final String URL_END_POINT = "/script/*";
 
 	@EndPoint(value="/get", accepts = {HttpMethod.GET})
 	public ServiceResponse getScripts(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -40,10 +39,5 @@ public class ScriptService extends BaseServlet {
 		File scriptRepo = new File("scriptRepo");
 		scriptRepo.mkdirs();
 		return new ScriptRepository(scriptRepo);
-	}
-
-	@Override
-	protected String getUrlEndPoint() {
-		return URL_END_POINT;
 	}
 }
