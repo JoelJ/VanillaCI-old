@@ -15,6 +15,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,10 +43,16 @@ public class JobService extends BaseServlet {
 		return new ServiceResponse("Hello from JobService!");
 	}
 
-	private Map<String, String> getParametersFromRequest(HttpServletRequest request) {
-		String parametersJson = request.getParameter("userParameters");
+	private Map<String, String> getParametersFromRequest(HttpServletRequest request) throws IOException {
+		String parametersJson = request.getParameter("parameterValues");
+		if(parametersJson == null || parametersJson.isEmpty()) {
+			return Collections.emptyMap();
+		}
 
-		return null;
+		JsonFactory factory = new JsonFactory();
+		ObjectMapper mapper = new ObjectMapper(factory); //TODO: make this a reusable field
+		TypeReference<Map<String, String>> parameterValuesTypeReference = new TypeReference<Map<String, String>>() {};
+		return mapper.readValue(parametersJson, parameterValuesTypeReference);
 	}
 
 	private int getBuildNumberFromRequest(HttpServletRequest request) {
@@ -55,11 +62,10 @@ public class JobService extends BaseServlet {
 	private Job getJobFromRequest(HttpServletRequest request) throws IOException {
 		JsonFactory factory = new JsonFactory();
 		ObjectMapper mapper = new ObjectMapper(factory); //TODO: make this a reusable field
-		TypeReference<Job> scriptNameTypeRef = new TypeReference<Job>() {};
+		TypeReference<Job> jobTypeReference = new TypeReference<Job>() {};
 
 		String jobJson = request.getParameter("job");
-		Job job = mapper.readValue(jobJson, scriptNameTypeRef);
-		return job;
+		return mapper.readValue(jobJson, jobTypeReference);
 	}
 
 
