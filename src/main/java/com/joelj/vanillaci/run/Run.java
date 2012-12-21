@@ -25,9 +25,13 @@ public class Run implements Runnable {
 
 	private transient Thread thread;
 	private volatile Status status;
+	private final String name;
 	private final int buildNumber;
+	private final String id;
 
-	public Run(int buildNumber, File workspace, File log, List<Script> buildScripts, List<Script> postBuildScripts, Map<String, String> environment) {
+	public Run(String name, int buildNumber, File workspace, File log, List<Script> buildScripts, List<Script> postBuildScripts, Map<String, String> environment) {
+		this.name = name;
+		this.id = name + "#" + buildNumber;
 		this.buildNumber = buildNumber;
 		this.workspace = Confirm.isDirectory("workspace", workspace);
 		this.log = Confirm.isFile("log", log);
@@ -45,6 +49,14 @@ public class Run implements Runnable {
 
 		thread = new Thread(this);
 		thread.start();
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String getId() {
+		return id;
 	}
 
 	public int getBuildNumber() {
@@ -81,7 +93,7 @@ public class Run implements Runnable {
 
 	@Override
 	public void run() {
-		OutputStream log = null; //TODO: wrap this is something easier to use
+		OutputStream log; //TODO: wrap this is something easier to use
 		try {
 			log = new FileOutputStream(this.log);
 		} catch (FileNotFoundException e) {

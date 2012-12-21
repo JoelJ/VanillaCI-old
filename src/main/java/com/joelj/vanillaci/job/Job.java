@@ -22,18 +22,14 @@ import java.util.*;
  * Time: 11:13 AM
  */
 public class Job implements Serializable {
-	private final File workspacesDir;
 	private final String name;
 	private final String description;
 	private final List<Parameter> parameters;
 	private final List<ScriptName> preScripts;
 	private final List<ScriptName> scripts;
 	private final List<ScriptName> postScripts;
-	private final ScriptRepository scriptRepository;
 
-	public Job(File workspacesDir, ScriptRepository scriptRepository, String name, String description, List<Parameter> parameters, List<ScriptName> preScripts, List<ScriptName> scripts, List<ScriptName> postScripts) {
-		this.workspacesDir = workspacesDir;
-		this.scriptRepository = scriptRepository;
+	public Job(String name, String description, List<Parameter> parameters, List<ScriptName> preScripts, List<ScriptName> scripts, List<ScriptName> postScripts) {
 		this.name = Confirm.notNull("name", name);
 		this.description = Confirm.notNull("description", description);
 
@@ -43,7 +39,7 @@ public class Job implements Serializable {
 		this.postScripts = ImmutableList.copyOf(Confirm.notNull(postScripts));
 	}
 
-	public Run execute(int buildNumber, Map<String, String> parameters) {
+	public Run execute(File workspacesDir, ScriptRepository scriptRepository, int buildNumber, Map<String, String> parameters) {
 		Map<String, String> environment = new HashMap<String, String>(parameters);
 		for (Parameter parameter : this.parameters) {
 			if(!environment.containsKey(parameter.getName())) {
@@ -79,13 +75,9 @@ public class Job implements Serializable {
 			throw new UnhandledException(e);
 		}
 
-		Run run = new Run(buildNumber, workspace, log, buildScripts, postBuildScripts, environment);
+		Run run = new Run(this.getName(), buildNumber, workspace, log, buildScripts, postBuildScripts, environment);
 		run.start();
 		return run;
-	}
-
-	public File getWorkspacesDir() {
-		return workspacesDir;
 	}
 
 	public String getName() {

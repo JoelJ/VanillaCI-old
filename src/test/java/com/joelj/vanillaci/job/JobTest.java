@@ -55,8 +55,6 @@ public class JobTest {
 		List<ScriptName> postScripts = ImmutableList.of();
 
 		Job job = new Job(
-				workspaceDirectory,
-				scriptRepository,
 				"Demo Job",
 				"This is a demo job",
 				parameters,
@@ -64,7 +62,7 @@ public class JobTest {
 				scripts,
 				postScripts
 		);
-		Run run = job.execute(10, ImmutableMap.<String, String>of());
+		Run run = job.execute(workspaceDirectory, scriptRepository, 10, ImmutableMap.<String, String>of());
 		while (run.isRunning()) {
 			Thread.sleep(100);
 		}
@@ -98,8 +96,6 @@ public class JobTest {
 		List<ScriptName> postScripts = ImmutableList.of();
 
 		Job job = new Job(
-				workspaceDirectory,
-				scriptRepository,
 				"Test Job",
 				"This is a test job",
 				parameters,
@@ -108,7 +104,7 @@ public class JobTest {
 				postScripts
 		);
 
-		Run run = job.execute(10, ImmutableMap.<String, String>of("EXIT_CODE", "1"));
+		Run run = job.execute(workspaceDirectory, scriptRepository, 10, ImmutableMap.<String, String>of("EXIT_CODE", "1"));
 		while (run.isRunning()) {
 			Thread.sleep(100);
 		}
@@ -133,8 +129,6 @@ public class JobTest {
 		List<ScriptName> postScripts = ImmutableList.of(new ScriptName("exitCode", "1"));
 
 		Job job = new Job(
-				workspaceDirectory,
-				scriptRepository,
 				"Test Job",
 				"This is a test job",
 				parameters,
@@ -143,7 +137,7 @@ public class JobTest {
 				postScripts
 		);
 
-		Run run = job.execute(11, ImmutableMap.<String, String>of("EXIT_CODE", "6"));
+		Run run = job.execute(workspaceDirectory, scriptRepository, 11, ImmutableMap.<String, String>of("EXIT_CODE", "6"));
 		while (run.isRunning()) {
 			Thread.sleep(100);
 		}
