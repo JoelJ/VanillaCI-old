@@ -3,6 +3,7 @@ package com.joelj.vanillaci.restapi.service;
 import com.google.common.collect.ImmutableMap;
 import com.joelj.vanillaci.job.Job;
 import com.joelj.vanillaci.restapi.annotations.EndPoint;
+import com.joelj.vanillaci.restapi.config.Config;
 import com.joelj.vanillaci.restapi.core.BaseServlet;
 import com.joelj.vanillaci.restapi.core.HttpMethod;
 import com.joelj.vanillaci.restapi.core.ServiceResponse;
@@ -38,11 +39,10 @@ public class JobService extends BaseServlet {
 		ImmutableMap.Builder<String, String> environment = ImmutableMap.builder();
 		environment.putAll(parameters);
 
-		Run run = job.execute(null, null, buildNumber, environment.build()); //TODO
+		Run run = job.execute(Config.getWorkspaceDirectory(), Config.getScriptRepository(), buildNumber, environment.build());
 		addRun(run);
 
-
-		return new ServiceResponse("Hello from JobService!");
+		return new ServiceResponse(run.getId());
 	}
 
 	private Map<String, String> getParametersFromRequest(HttpServletRequest request) throws IOException {

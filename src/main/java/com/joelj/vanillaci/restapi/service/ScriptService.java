@@ -2,6 +2,7 @@ package com.joelj.vanillaci.restapi.service;
 
 import com.google.common.collect.ImmutableMap;
 import com.joelj.vanillaci.restapi.annotations.EndPoint;
+import com.joelj.vanillaci.restapi.config.Config;
 import com.joelj.vanillaci.restapi.core.BaseServlet;
 import com.joelj.vanillaci.restapi.core.HttpMethod;
 import com.joelj.vanillaci.restapi.core.ServiceResponse;
@@ -27,13 +28,13 @@ public class ScriptService extends BaseServlet {
 
 	@EndPoint(value="/get", accepts = {HttpMethod.GET})
 	public ServiceResponse getScripts(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		List<ScriptName> scripts = getScriptRepository().getScripts();
+		List<ScriptName> scripts = Config.getScriptRepository().getScripts();
 		return new ServiceResponse(scripts);
 	}
 
 	@EndPoint(value="/add", accepts = {HttpMethod.POST})
 	public ServiceResponse addScripts(HttpServletRequest request, HttpServletResponse response, List<File> uploadedFiles) throws IOException {
-		ScriptRepository scriptRepository = getScriptRepository();
+		ScriptRepository scriptRepository = Config.getScriptRepository();
 		ImmutableMap.Builder<String, DeploymentStatus> result = ImmutableMap.builder();
 		for (File uploadedFile : uploadedFiles) {
 			String filename = uploadedFile.getName();
@@ -58,14 +59,6 @@ public class ScriptService extends BaseServlet {
 		}
 		Map<String, DeploymentStatus> map = result.build();
 		return new ServiceResponse(map);
-	}
-
-	public ScriptRepository getScriptRepository() {
-		//TODO: create config file
-		File scriptRepo = new File("scriptRepo");
-		//noinspection ResultOfMethodCallIgnored
-		scriptRepo.mkdirs();
-		return new ScriptRepository(scriptRepo);
 	}
 
 	private static enum DeploymentStatus {
