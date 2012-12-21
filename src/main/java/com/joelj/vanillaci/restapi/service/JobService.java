@@ -26,6 +26,7 @@ import java.util.Map;
  */
 @WebServlet(urlPatterns= "/job/*")
 public class JobService extends BaseServlet {
+	private Map<String, Run> runDb = new HashMap<String, Run>();
 
 	@EndPoint(value="/execute", accepts = {HttpMethod.POST})
 	public ServiceResponse execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -68,9 +69,12 @@ public class JobService extends BaseServlet {
 		return mapper.readValue(jobJson, jobTypeReference);
 	}
 
-
-	private Map<String, Run> runDb = new HashMap<String, Run>(); //TODO: make this DB backed
 	private void addRun(Run run) {
 		runDb.put(run.getId(), run);
+	}
+
+	private Run getRun(String id) {
+		//TODO: if run is done running, we need to serialize it to our DB.
+		return runDb.get(id);
 	}
 }
