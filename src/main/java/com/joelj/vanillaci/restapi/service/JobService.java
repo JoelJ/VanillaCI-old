@@ -7,6 +7,7 @@ import com.joelj.vanillaci.restapi.core.BaseServlet;
 import com.joelj.vanillaci.restapi.core.HttpMethod;
 import com.joelj.vanillaci.restapi.core.ServiceResponse;
 import com.joelj.vanillaci.run.Run;
+import com.joelj.vanillaci.util.Confirm;
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
@@ -66,6 +67,7 @@ public class JobService extends BaseServlet {
 		TypeReference<Job> jobTypeReference = new TypeReference<Job>() {};
 
 		String jobJson = request.getParameter("job");
+		Confirm.notNull("job", jobJson);
 		return mapper.readValue(jobJson, jobTypeReference);
 	}
 
