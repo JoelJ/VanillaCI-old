@@ -71,4 +71,20 @@ public class Confirm {
 		}
 		return value;
 	}
+
+	public static <T> T instanceOf(String fieldName, Class<T> type, Object value) {
+		notNull("type", type);
+		notNull(fieldName, value);
+		if(type.isAssignableFrom(value.getClass())) {
+			return type.cast(value);
+		}
+		throw new IllegalArgumentException(fieldName + " must be a " + type.getCanonicalName());
+	}
+
+	public static <T> T instanceOfOrNull(String fieldName, Class<T> type, Object value) {
+		if(value == null) {
+			return null;
+		}
+		return instanceOf(fieldName, type, value);
+	}
 }
