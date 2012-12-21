@@ -1,5 +1,6 @@
 package com.joelj.vanillaci.restapi.core;
 
+import com.google.common.collect.ImmutableMap;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.IOException;
@@ -15,6 +16,17 @@ import java.util.Map;
  */
 public class ServiceResponse {
 	private Object object;
+
+	public ServiceResponse(Throwable t) {
+		this((Object)error(t));
+	}
+
+	private static Map<String, String> error(Throwable t) {
+		ImmutableMap.Builder<String, String> builder = ImmutableMap.builder();
+		builder.put("type", t.getClass().getCanonicalName());
+		builder.put("message", t.getMessage());
+		return builder.build();
+	}
 
 	public ServiceResponse(Serializable object) {
 		this((Object)object);
