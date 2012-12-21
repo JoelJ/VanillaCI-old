@@ -7,6 +7,9 @@ import com.joelj.vanillaci.restapi.core.BaseServlet;
 import com.joelj.vanillaci.restapi.core.HttpMethod;
 import com.joelj.vanillaci.restapi.core.ServiceResponse;
 import com.joelj.vanillaci.run.Run;
+import org.codehaus.jackson.JsonFactory;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -32,7 +35,7 @@ public class JobService extends BaseServlet {
 		ImmutableMap.Builder<String, String> environment = ImmutableMap.builder();
 		environment.putAll(parameters);
 
-		Run run = job.execute(buildNumber, environment.build());
+		Run run = job.execute(null, null, buildNumber, environment.build()); //TODO
 		addRun(run);
 
 
@@ -40,6 +43,8 @@ public class JobService extends BaseServlet {
 	}
 
 	private Map<String, String> getParametersFromRequest(HttpServletRequest request) {
+		String parametersJson = request.getParameter("userParameters");
+
 		return null;
 	}
 
@@ -47,8 +52,14 @@ public class JobService extends BaseServlet {
 		return Integer.parseInt(request.getParameter("buildNumber"));
 	}
 
-	private Job getJobFromRequest(HttpServletRequest request) {
-		return null;
+	private Job getJobFromRequest(HttpServletRequest request) throws IOException {
+		JsonFactory factory = new JsonFactory();
+		ObjectMapper mapper = new ObjectMapper(factory); //TODO: make this a reusable field
+		TypeReference<Job> scriptNameTypeRef = new TypeReference<Job>() {};
+
+		String jobJson = request.getParameter("job");
+		Job job = mapper.readValue(jobJson, scriptNameTypeRef);
+		return job;
 	}
 
 

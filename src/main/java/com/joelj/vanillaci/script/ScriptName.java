@@ -16,6 +16,15 @@ public class ScriptName implements Serializable {
 	private final String name;
 	private final String hash;
 
+	/**
+	 * Constructor used only for deserialization. Do not ever call this method.
+	 */
+	@Deprecated
+	ScriptName() {
+		name = null;
+		hash = null;
+	}
+
 	public ScriptName(String name, String hash) {
 		this.name = name;
 		this.hash = hash;

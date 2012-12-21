@@ -29,6 +29,19 @@ public class Job implements Serializable {
 	private final List<ScriptName> scripts;
 	private final List<ScriptName> postScripts;
 
+	/**
+	 * Constructor used only for deserialization. Do not ever call this method.
+	 */
+	@Deprecated
+	Job() {
+		name = null;
+		description = null;
+		parameters = null;
+		preScripts = null;
+		scripts = null;
+		postScripts = null;
+	}
+
 	public Job(String name, String description, List<Parameter> parameters, List<ScriptName> preScripts, List<ScriptName> scripts, List<ScriptName> postScripts) {
 		this.name = Confirm.notNull("name", name);
 		this.description = Confirm.notNull("description", description);
