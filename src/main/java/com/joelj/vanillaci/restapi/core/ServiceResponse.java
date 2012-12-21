@@ -22,9 +22,12 @@ public class ServiceResponse {
 	}
 
 	private static Map<String, String> error(Throwable t) {
+		t.printStackTrace();
 		ImmutableMap.Builder<String, String> builder = ImmutableMap.builder();
 		builder.put("type", t.getClass().getCanonicalName());
-		builder.put("message", t.getMessage());
+		if(t.getMessage() != null && !t.getMessage().isEmpty()) {
+			builder.put("message", t.getMessage());
+		}
 		return builder.build();
 	}
 
