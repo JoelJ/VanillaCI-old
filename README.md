@@ -6,3 +6,8 @@ VanillaCI
 A very simple Continuous Integration server.
 
 Rather than using plugins, it uses hosted script bundles.
+
+Download
+========
+
+You can find the latest build on the [BuildHive Artifact Page](https://buildhive.cloudbees.com/job/JoelJ/job/VanillaCI/lastSuccessfulBuild/com.joelj.vanillaci$VanillaCI/).
