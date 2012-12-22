@@ -7,6 +7,7 @@ import com.joelj.vanillaci.exceptions.NullResponseException;
 import com.joelj.vanillaci.exceptions.UnboundUrlException;
 import com.joelj.vanillaci.exceptions.UnhandledException;
 import com.joelj.vanillaci.restapi.annotations.EndPoint;
+import com.joelj.vanillaci.util.Logger;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -29,6 +30,7 @@ import java.util.List;
  * Time: 10:08 PM
  */
 public abstract class BaseServlet extends HttpServlet {
+	private static final Logger log = Logger.getLogger(BaseServlet.class);
 	public static final int MEGABYTES = 1024 * 1024;
 
 	private void process(HttpServletRequest request, HttpServletResponse response, HttpMethod httpMethod) throws IOException {
@@ -74,18 +76,24 @@ public abstract class BaseServlet extends HttpServlet {
 									if(result instanceof ServiceResponse) {
 										return (ServiceResponse) result;
 									} else {
+										InvalidResponseException invalidResponseException = new InvalidResponseException(ServiceResponse.class, result.getClass());
+										log.error("Invalid response", invalidResponseException);
 										response.setStatus(500);
-										throw new InvalidResponseException(ServiceResponse.class, result.getClass());
+										throw invalidResponseException;
 									}
 								} else {
+									NullResponseException nullResponseException = new NullResponseException(request.getPathInfo(), httpMethod);
+									log.error("Null response", nullResponseException);
 									response.setStatus(500);
-									throw new NullResponseException(request.getPathInfo(), httpMethod);
+									throw nullResponseException;
 								}
 							}
 						}
 					} catch (IllegalAccessException e) {
+						log.error("IllegalAccessException - Servlet methods need to be accessible to BaseServlet.", e);
 						throw new UnhandledException(e);
 					} catch (InvocationTargetException e) {
+						log.error("Error while invoking", e);
 						Throwable cause = e.getCause();
 						if(cause instanceof RuntimeException) {
 							throw (RuntimeException)cause;
@@ -97,8 +105,10 @@ public abstract class BaseServlet extends HttpServlet {
 				}
 			}
 		}
+		UnboundUrlException unboundUrlException = new UnboundUrlException(request.getPathInfo(), httpMethod);
+		log.error("Nothing was bound to " + request.getPathInfo() + " for HTTP Method " + httpMethod, unboundUrlException);
 		response.setStatus(404);
-		throw new UnboundUrlException(request.getPathInfo(), httpMethod);
+		throw unboundUrlException;
 	}
 
 	private List<File> getUploadedFiles(File tmpDir, HttpServletRequest request) throws FileUploadException, IOException {
