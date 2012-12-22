@@ -1,9 +1,15 @@
 package com.joelj.vanillaci.restapi.config;
 
-import com.google.common.io.Files;
+import com.joelj.vanillaci.exceptions.UnhandledException;
 import com.joelj.vanillaci.script.ScriptRepository;
+import com.joelj.vanillaci.util.Logger;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
 
 /**
  * User: Joel Johnson
@@ -11,32 +17,51 @@ import java.io.File;
  * Time: 2:51 PM
  */
 public class Config {
-	private static class LazyScriptRepository {
-		private static ScriptRepository scriptRepository = getScriptRepository();
+	private static final Logger LOG = Logger.getLogger(Config.class);
+	private static final Properties properties = new Properties();
+	private static final ScriptRepository scriptRepository;
+	private static final File workspace;
 
-		private static ScriptRepository getScriptRepository() {
-			File scriptRepo = new File("scriptRepo");
-			//noinspection ResultOfMethodCallIgnored
-			scriptRepo.mkdirs();
-			return new ScriptRepository(scriptRepo);
+	static {
+		String vanillaCiConfigPath = System.getenv("VANILLACI_CONFIG");
+		if(vanillaCiConfigPath == null) {
+			vanillaCiConfigPath = "config.properties";
 		}
-	}
 
-	private static class LazyWorkspace {
-		private static File workspace = getScriptRepository();
+		File file = new File(vanillaCiConfigPath);
+		if(file.exists() && file.isFile()) {
+			FileInputStream fileInputStream = null;
+			try {
+				fileInputStream = FileUtils.openInputStream(file);
+				properties.load(fileInputStream);
+			} catch (IOException e) {
+				throw new UnhandledException(e);
+			} finally {
+				IOUtils.closeQuietly(fileInputStream);
+			}
+		} else {
+			LOG.warn("Config file " + file.getAbsolutePath() + " does not exist. Using defaults.");
+		}
 
-		private static File getScriptRepository() {
-			File scriptRepo = Files.createTempDir();
-			scriptRepo.deleteOnExit();
-			return scriptRepo;
+		File scriptRepoDir = new File(properties.getProperty("scriptrepository.path", "scriptRepo"));
+		if(!scriptRepoDir.exists() && !scriptRepoDir.mkdirs()) {
+			RuntimeException runtimeException = new RuntimeException("Could not create script repository directory: " + scriptRepoDir.getAbsolutePath());
+			LOG.error("Could not create script repository directory: " + scriptRepoDir.getAbsolutePath());
+			throw runtimeException; //Typically I don't like throwing exceptions in static init blocks, but this needs to be fatal.
+		}
+		scriptRepository = new ScriptRepository(scriptRepoDir);
+
+		workspace = new File(properties.getProperty("workspace.path", "workspace"));
+		if(!workspace.exists() && !workspace.mkdirs()) {
+			throw new RuntimeException("Could not create workspace directory: " + workspace.getAbsolutePath());
 		}
 	}
 
 	public static ScriptRepository getScriptRepository() {
-		return LazyScriptRepository.scriptRepository;
+		return scriptRepository;
 	}
 
 	public static File getWorkspaceDirectory() {
-		return LazyWorkspace.workspace;
+		return workspace;
 	}
 }
