@@ -9,6 +9,7 @@
     <version>0.2</version>
 	<modules>
 		<module>SlaveMachine</module>
+		<module>MasterMachine</module>
 	</modules>
 
 	<name>VanillaCI</name>
