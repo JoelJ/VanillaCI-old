@@ -10,4 +10,5 @@ Rather than using plugins, it uses hosted script bundles.
 Download
 ========
 
-You can find the latest build on the [BuildHive Artifact Page](https://buildhive.cloudbees.com/job/JoelJ/job/VanillaCI/lastSuccessfulBuild/com.joelj.vanillaci$VanillaCI/).
+You can find the latest build on the BuildHive Artifact Page
+* [Slave Machine](https://buildhive.cloudbees.com/job/JoelJ/job/VanillaCI/lastSuccessfulBuild/com.joelj.vanillaci$SlaveMachine/).
