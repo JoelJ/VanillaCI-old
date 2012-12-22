@@ -7,9 +7,12 @@
     <groupId>com.joelj.vanillaci</groupId>
     <artifactId>VanillaCI</artifactId>
     <version>0.2</version>
+	<modules>
+		<module>SlaveMachine</module>
+	</modules>
 
 	<name>VanillaCI</name>
-	<packaging>war</packaging>
+	<packaging>pom</packaging>
 
 	<dependencies>
 		<dependency>

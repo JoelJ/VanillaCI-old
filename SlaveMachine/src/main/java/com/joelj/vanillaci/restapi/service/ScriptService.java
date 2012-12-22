@@ -23,7 +23,7 @@ import java.util.Map;
  * Date: 12/12/12
  * Time: 10:18 PM
  */
-@WebServlet(urlPatterns = "/script/*")
+@WebServlet(name="ScriptService", urlPatterns = "/script/*")
 public class ScriptService extends BaseServlet {
 
 	@EndPoint(value="/get", accepts = {HttpMethod.GET})

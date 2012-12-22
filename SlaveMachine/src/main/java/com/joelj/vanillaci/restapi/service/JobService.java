@@ -26,7 +26,7 @@ import java.util.Map;
  * Date: 12/12/12
  * Time: 9:40 PM
  */
-@WebServlet(urlPatterns= "/job/*")
+@WebServlet(name="JobService", urlPatterns= "/job/*")
 public class JobService extends BaseServlet {
 	private Map<String, Run> runDb = new HashMap<String, Run>();
 
@@ -66,8 +66,8 @@ public class JobService extends BaseServlet {
 		ObjectMapper mapper = new ObjectMapper(factory); //TODO: make this a reusable field
 		TypeReference<Job> jobTypeReference = new TypeReference<Job>() {};
 
-		String jobJson = request.getParameter("job");
-		Confirm.notNull("job", jobJson);
+		String jobJson = request.getParameter("com/joelj/vanillaci/job");
+		Confirm.notNull("com/joelj/vanillaci/job", jobJson);
 		return mapper.readValue(jobJson, jobTypeReference);
 	}
 

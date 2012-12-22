@@ -25,7 +25,7 @@ public class JobRepository {
 	 * @return All the scripts that need to be deployed before executing this job.
 	 */
 	public Set<ScriptName> findMissingScriptsForJob(Job job) {
-		Confirm.notNull("job", job);
+		Confirm.notNull("com/joelj/vanillaci/job", job);
 
 		Set<ScriptName> requiredScripts = job.getRequiredScripts();
 		ImmutableSet.Builder<ScriptName> missingScripts = ImmutableSet.builder();
