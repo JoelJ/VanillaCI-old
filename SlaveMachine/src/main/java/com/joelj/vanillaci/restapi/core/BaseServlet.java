@@ -15,6 +15,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FileUtils;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -50,6 +51,9 @@ public abstract class BaseServlet extends HttpServlet {
 
 	private ServiceResponse processRequest(HttpServletRequest request, HttpServletResponse response, HttpMethod httpMethod) throws IOException, FileUploadException {
 		String name = request.getPathInfo();
+		if(name == null) {
+			name = "";
+		}
 
 		Method[] declaredMethods = this.getClass().getDeclaredMethods();
 		for (Method declaredMethod : declaredMethods) {
@@ -105,7 +109,16 @@ public abstract class BaseServlet extends HttpServlet {
 				}
 			}
 		}
-		UnboundUrlException unboundUrlException = new UnboundUrlException(request.getPathInfo(), httpMethod);
+
+		WebServlet annotation = this.getClass().getAnnotation(WebServlet.class);
+		String serviceName = "no-name";
+		if(annotation != null) {
+			String annotationName = annotation.name();
+			if(annotationName != null) {
+				serviceName = annotationName;
+			}
+		}
+		UnboundUrlException unboundUrlException = new UnboundUrlException(serviceName, request.getPathInfo(), httpMethod);
 		log.error("Nothing was bound to " + request.getPathInfo() + " for HTTP Method " + httpMethod, unboundUrlException);
 		response.setStatus(404);
 		throw unboundUrlException;

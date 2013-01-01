@@ -10,7 +10,7 @@ import java.io.IOException;
  * Time: 10:28 PM
  */
 public class UnboundUrlException extends IOException {
-	public UnboundUrlException(String url, HttpMethod method) {
-		super(url + " is unbound for method " + method);
+	public UnboundUrlException(String serviceName, String url, HttpMethod method) {
+		super(url + " is unbound for method " + method + " in " + serviceName);
 	}
 }
