@@ -15,10 +15,14 @@ import java.util.Map;
  * Time: 10:22 PM
  */
 public class ServiceResponse {
+	public static final String ERROR = "error";
+	public static final String SUCCESS = "result";
+
+	private String outermostKey;
 	private Object object;
 
 	public ServiceResponse(Throwable t) {
-		this((Object)error(t));
+		this(error(t), ERROR);
 	}
 
 	private static Map<String, String> error(Throwable t) {
@@ -32,23 +36,24 @@ public class ServiceResponse {
 	}
 
 	public ServiceResponse(Serializable object) {
-		this((Object)object);
+		this(object, SUCCESS);
 	}
 
 	public ServiceResponse(Collection<? extends Serializable> object) {
-		this((Object)object);
+		this(object, SUCCESS);
 	}
 
 	public ServiceResponse(Map<? extends Serializable, ? extends Serializable> object) {
-		this((Object)object);
+		this(object, SUCCESS);
 	}
 
-	private ServiceResponse(Object object) {
+	private ServiceResponse(Object object, String outermostKey) {
 		this.object = object;
+		this.outermostKey = outermostKey;
 	}
 
 	public void writeJson(OutputStream outputStream) throws IOException {
 		ObjectMapper mapper = new ObjectMapper();
-		mapper.writeValue(outputStream, this.object);
+		mapper.writeValue(outputStream, ImmutableMap.of(this.outermostKey, this.object));
 	}
 }
