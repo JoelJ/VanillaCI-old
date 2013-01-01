@@ -30,6 +30,6 @@ public class Heartbeat extends HttpServlet {
 		machines = new ConcurrentHashMap<String, SlaveMachine>();
 
 		timer = new Timer();
-		timer.schedule(new HeartbeatTask(machines), 0, 100 * MILLISECONDS);
+//		timer.schedule(new HeartbeatTask(machines), 0, 100 * MILLISECONDS);
 	}
 }
