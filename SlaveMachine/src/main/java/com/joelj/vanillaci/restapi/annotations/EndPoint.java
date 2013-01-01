@@ -14,6 +14,6 @@ import java.lang.annotation.RetentionPolicy;
 @java.lang.annotation.Retention(RetentionPolicy.RUNTIME)
 @java.lang.annotation.Documented
 public @interface EndPoint {
-	String value();
+	String value() default "";
 	HttpMethod[] accepts() default { HttpMethod.GET };
 }
