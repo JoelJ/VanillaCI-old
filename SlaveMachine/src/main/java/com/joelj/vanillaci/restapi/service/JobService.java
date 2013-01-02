@@ -51,11 +51,7 @@ public class JobService extends BaseServlet {
 		if(parametersJson == null || parametersJson.isEmpty()) {
 			return Collections.emptyMap();
 		}
-
-		JsonFactory factory = new JsonFactory();
-		ObjectMapper mapper = new ObjectMapper(factory); //TODO: make this a reusable field
-		TypeReference<Map<String, String>> parameterValuesTypeReference = new TypeReference<Map<String, String>>() {};
-		return mapper.readValue(parametersJson, parameterValuesTypeReference);
+		return JsonUtils.parse(parametersJson, new TypeReference<Map<String, String>>() {});
 	}
 
 	private int getBuildNumberFromRequest(HttpServletRequest request) {
@@ -63,13 +59,9 @@ public class JobService extends BaseServlet {
 	}
 
 	private Job getJobFromRequest(HttpServletRequest request) throws IOException {
-		JsonFactory factory = new JsonFactory();
-		ObjectMapper mapper = new ObjectMapper(factory); //TODO: make this a reusable field
-		TypeReference<Job> jobTypeReference = new TypeReference<Job>() {};
-
 		String jobJson = request.getParameter("job");
 		Confirm.notNull("job", jobJson);
-		return mapper.readValue(jobJson, jobTypeReference);
+		return JsonUtils.parse(jobJson, new TypeReference<Job>() {});
 	}
 
 	private void addRun(Run run) {
