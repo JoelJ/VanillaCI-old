@@ -20,4 +20,10 @@ public class JsonUtils {
 		Confirm.notNull("typeReference", typeReference);
 		return mapper.readValue(json, typeReference);
 	}
+
+	public static <T> T parse(String json, Class<T> typeReference) throws IOException {
+		Confirm.notNull("json", json);
+		Confirm.notNull("typeReference", typeReference);
+		return mapper.readValue(json, typeReference);
+	}
 }
