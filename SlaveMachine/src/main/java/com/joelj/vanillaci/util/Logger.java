@@ -61,8 +61,20 @@ public class Logger {
 		logger.info(message);
 	}
 
+	public void infop(String printfFormat, Object... vars) {
+		if(logger.isLoggable(Level.INFO)) {
+			logger.info(String.format(printfFormat, vars));
+		}
+	}
+
 	public void warn(String message) {
 		logger.warning(message);
+	}
+
+	public void warnp(String printfFormat, Object... vars) {
+		if(logger.isLoggable(Level.INFO)) {
+			logger.warning(String.format(printfFormat, vars));
+		}
 	}
 
 	public void error(String message) {
