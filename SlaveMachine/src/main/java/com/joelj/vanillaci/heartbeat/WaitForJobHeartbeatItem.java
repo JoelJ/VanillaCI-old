@@ -5,7 +5,7 @@ package com.joelj.vanillaci.heartbeat;
  * Date: 1/1/13
  * Time: 6:13 PM
  */
-public class WaitForJobHeartbeatItem implements HeartbeatItem {
+public class WaitForJobHeartbeatItem extends HeartbeatItem {
 	private final String id;
 	private final String jobName;
 	private final int buildNumber;

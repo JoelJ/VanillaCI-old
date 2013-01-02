@@ -1,11 +1,13 @@
 package com.joelj.vanillaci.heartbeat;
 
+import java.util.Map;
+
 /**
  * User: Joel Johnson
  * Date: 1/1/13
  * Time: 6:08 PM
  */
-public class TriggerJobHeartbeatItem implements HeartbeatItem {
+public class TriggerJobHeartbeatItem extends HeartbeatItem {
 	private final String id;
 	private final String jobName;
 
