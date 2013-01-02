@@ -3,7 +3,7 @@
 
 	<servlet>
 		<servlet-name>heartbeat</servlet-name>
-		<servlet-class>com.joelj.vanillaci.heartbeat.Heartbeat</servlet-class>
+		<servlet-class>com.vanillaci.master.heartbeat.Heartbeat</servlet-class>
 		<load-on-startup>0</load-on-startup>
 	</servlet>
 
