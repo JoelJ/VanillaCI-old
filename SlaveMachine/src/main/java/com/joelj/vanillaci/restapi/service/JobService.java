@@ -9,6 +9,7 @@ import com.joelj.vanillaci.restapi.core.HttpMethod;
 import com.joelj.vanillaci.restapi.core.ServiceResponse;
 import com.joelj.vanillaci.run.Run;
 import com.joelj.vanillaci.util.Confirm;
+import com.joelj.vanillaci.util.JsonUtils;
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
@@ -66,8 +67,8 @@ public class JobService extends BaseServlet {
 		ObjectMapper mapper = new ObjectMapper(factory); //TODO: make this a reusable field
 		TypeReference<Job> jobTypeReference = new TypeReference<Job>() {};
 
-		String jobJson = request.getParameter("com/joelj/vanillaci/job");
-		Confirm.notNull("com/joelj/vanillaci/job", jobJson);
+		String jobJson = request.getParameter("job");
+		Confirm.notNull("job", jobJson);
 		return mapper.readValue(jobJson, jobTypeReference);
 	}
 
