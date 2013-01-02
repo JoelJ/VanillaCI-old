@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Time: 4:35 PM
  */
 public class HeartbeatTracker {
-	private Map<String, HeartbeatItem> heartbeatTasks = new ConcurrentHashMap<String, HeartbeatItem>();
+	private final Map<String, HeartbeatItem> heartbeatTasks = new ConcurrentHashMap<String, HeartbeatItem>();
 
 	/**
 	 * Adds a task in the heartbeat that is eventually used to notify the master to queue a job.<br/>
@@ -37,7 +37,7 @@ public class HeartbeatTracker {
 
 	/**
 	 * Removes the item from the Heartbeat Tasks map.
-	 * @param uuid
+	 * @param uuid The ID of the task to remove.
 	 * @return True if the item was in the list and was properly removed. Otherwise, false is returned.
 	 */
 	public boolean remove(String uuid) {
