@@ -2,6 +2,7 @@ package com.joelj.vanillaci.restapi.service;
 
 import com.joelj.vanillaci.restapi.annotations.EndPoint;
 import com.joelj.vanillaci.restapi.core.BaseServlet;
+import com.joelj.vanillaci.restapi.core.HttpMethod;
 import com.joelj.vanillaci.restapi.core.ServiceResponse;
 
 import javax.servlet.annotation.WebServlet;
@@ -21,13 +22,13 @@ public class HeartbeatService extends BaseServlet {
 		return new ServiceResponse("hello there");
 	}
 
-	@EndPoint
-	public ServiceResponse getBlank(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		return get(request, response);
+	@EndPoint(value = "/reset", accepts = HttpMethod.POST)
+	public ServiceResponse reset(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		return new ServiceResponse("hello there");
 	}
 
-	@EndPoint(value = "/")
-	public ServiceResponse getSlash(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		return get(request, response);
+	@EndPoint(value = "/add", accepts = HttpMethod.PUT)
+	public ServiceResponse add(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		return new ServiceResponse("hello there");
 	}
 }
