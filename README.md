@@ -11,4 +11,4 @@ Download
 ========
 
 You can find the latest build on the BuildHive Artifact Page
-* [Slave Machine](https://buildhive.cloudbees.com/job/JoelJ/job/VanillaCI/lastSuccessfulBuild/com.joelj.vanillaci$SlaveMachine/)
+* [Slave Machine](https://buildhive.cloudbees.com/job/JoelJ/job/VanillaCI/lastSuccessfulBuild/com.vanillaci$SlaveMachine/)
