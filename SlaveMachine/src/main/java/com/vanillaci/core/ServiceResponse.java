@@ -1,4 +1,4 @@
-package com.vanillaci.slave.restapi.core;
+package com.vanillaci.core;
 
 import com.google.common.collect.ImmutableMap;
 import org.codehaus.jackson.map.ObjectMapper;

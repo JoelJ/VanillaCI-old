@@ -1,6 +1,6 @@
 package com.vanillaci.slave.exceptions;
 
-import com.vanillaci.slave.restapi.core.HttpMethod;
+import com.vanillaci.core.HttpMethod;
 
 import java.io.IOException;
 

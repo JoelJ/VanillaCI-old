@@ -1,6 +1,6 @@
 package com.vanillaci.slave.restapi.annotations;
 
-import com.vanillaci.slave.restapi.core.HttpMethod;
+import com.vanillaci.core.HttpMethod;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.RetentionPolicy;

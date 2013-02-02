@@ -1,4 +1,4 @@
-package com.vanillaci.slave.restapi.core;
+package com.vanillaci.core;
 
 /**
  * User: Joel Johnson

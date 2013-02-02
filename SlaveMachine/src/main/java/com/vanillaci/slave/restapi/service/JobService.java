@@ -2,12 +2,12 @@ package com.vanillaci.slave.restapi.service;
 
 import com.google.common.collect.ImmutableMap;
 import com.vanillaci.slave.restapi.annotations.EndPoint;
-import com.vanillaci.slave.restapi.core.HttpMethod;
+import com.vanillaci.core.HttpMethod;
 import com.vanillaci.slave.run.Run;
 import com.vanillaci.slave.job.Job;
 import com.vanillaci.slave.restapi.config.Config;
-import com.vanillaci.slave.restapi.core.BaseServlet;
-import com.vanillaci.slave.restapi.core.ServiceResponse;
+import com.vanillaci.core.BaseServlet;
+import com.vanillaci.core.ServiceResponse;
 import com.vanillaci.slave.util.Confirm;
 import com.vanillaci.slave.util.JsonUtils;
 import org.codehaus.jackson.type.TypeReference;

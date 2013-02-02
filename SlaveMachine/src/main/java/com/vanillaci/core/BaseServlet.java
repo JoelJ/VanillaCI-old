@@ -1,4 +1,4 @@
-package com.vanillaci.slave.restapi.core;
+package com.vanillaci.core;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.Files;
