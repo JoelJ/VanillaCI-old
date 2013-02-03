@@ -1,6 +1,10 @@
 package com.vanillaci.slave;
 
+import com.vanillaci.master.heartbeat.Heartbeat;
 import com.vanillaci.slave.util.Confirm;
+import com.vanillaci.slave.util.Logger;
+import org.quartz.JobKey;
+import org.quartz.SchedulerException;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -11,12 +15,14 @@ import java.util.concurrent.ConcurrentHashMap;
  * Time: 3:22 PM
  */
 public class SlaveRepository {
+	private static final Logger log = Logger.getLogger(SlaveRepository.class);
 	private final Map<String, Slave> slaves = new ConcurrentHashMap<String, Slave>();
 
 	public void add(Slave slave) {
 		Confirm.notNull("slave", slave);
 		Confirm.isFalse("slave", has(slave), "Cannot add slave. Duplicate name. " + slave.toString()); //TODO: Localize
 		slaves.put(slave.getName(), slave);
+		slave.scheduleHeartbeat();
 	}
 
 	public boolean has(Slave slave) {
@@ -34,6 +40,13 @@ public class SlaveRepository {
 		if(!slave.getLocation().equals(removed.getLocation())) {
 			slaves.put(removed.getName(), removed);
 			throw new IllegalStateException("Slave in repository (" + removed + ") doesn't match given slave (" + slave + ")"); //TODO: Localize
+		}
+
+		try {
+			Heartbeat.SCHEDULER_FACTORY.getScheduler().deleteJob(new JobKey(slave.getName(), slave.getHeartbeatGroup()));
+		} catch (SchedulerException e) {
+			log.error("Could not unschedule slave: " + slave + ". groupId: " +slave.getHeartbeatGroup());
+			throw new RuntimeException(e);
 		}
 	}
 
