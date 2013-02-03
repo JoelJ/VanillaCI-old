@@ -1,7 +1,8 @@
 package com.vanillaci.slave.util;
 
+import com.google.common.collect.ImmutableList;
+
 import javax.servlet.ServletRequest;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -27,6 +28,6 @@ public class RequestUtils {
 		if(parameterValues == null) {
 			return Collections.emptyList();
 		}
-		return Arrays.asList(parameterValues);
+		return ImmutableList.copyOf(parameterValues);
 	}
 }
