@@ -5,7 +5,6 @@ import com.vanillaci.slave.util.Confirm;
 
 import java.io.Serializable;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -16,12 +15,12 @@ import java.util.List;
  */
 public class Slave implements Serializable {
 	private final String name;
-	private final URI uri;
+	private final URI location;
 	private final List<String> labels;
 
-	public Slave(String name, URI uri, Collection<String> labels) {
+	public Slave(String name, URI location, Collection<String> labels) {
 		this.name = name;
-		this.uri = uri;
+		this.location = location;
 		this.labels = ImmutableList.copyOf(Confirm.notNull(labels));
 	}
 
@@ -29,11 +28,19 @@ public class Slave implements Serializable {
 		return name;
 	}
 
-	public URI getUri() {
-		return uri;
+	public URI getLocation() {
+		return location;
 	}
 
 	public List<String> getLabels() {
 		return labels;
+	}
+
+	@Override
+	public String toString() {
+		return "Slave{" +
+				"name='" + name + '\'' +
+				", location=" + location +
+				'}';
 	}
 }

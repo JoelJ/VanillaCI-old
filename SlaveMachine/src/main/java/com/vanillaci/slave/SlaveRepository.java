@@ -31,7 +31,7 @@ public class SlaveRepository {
 		Confirm.isTrue("slave", removed != null, "Can't remove: slave doesn't exist. " + slave.toString()); //TODO: Localize
 		assert removed != null;
 
-		if(!slave.getUri().equals(removed.getUri())) {
+		if(!slave.getLocation().equals(removed.getLocation())) {
 			slaves.put(removed.getName(), removed);
 			throw new IllegalStateException("Slave in repository (" + removed + ") doesn't match given slave (" + slave + ")"); //TODO: Localize
 		}
@@ -46,5 +46,9 @@ public class SlaveRepository {
 
 	public Collection<Slave> getAll() {
 		return slaves.values();
+	}
+
+	public int getCount() {
+		return slaves.size();
 	}
 }
