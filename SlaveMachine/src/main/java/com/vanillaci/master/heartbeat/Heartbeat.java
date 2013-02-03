@@ -9,12 +9,6 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
-import java.util.Date;
-
-import static org.quartz.JobBuilder.newJob;
-import static org.quartz.TriggerBuilder.*;
-import static org.quartz.SimpleScheduleBuilder.*;
-
 /**
  * User: Joel Johnson
  * Date: 12/22/12
