@@ -73,4 +73,12 @@ public class Config {
 	public static SlaveRepository getSlaveRepository() {
 		return slaveRepository;
 	}
+
+	public static int getNumberOfHeartbeatThreads() {
+		return Integer.parseInt(properties.getProperty("heartbeat.threadcount", "5"));
+	}
+
+	public static long getHeartbeatIntervalInMilliseconds() {
+		return Long.parseLong(properties.getProperty("heartbeat.interval", "10000"));
+	}
 }
