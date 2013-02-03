@@ -32,4 +32,8 @@ public class Slave implements Serializable {
 	public URI getUri() {
 		return uri;
 	}
+
+	public List<String> getLabels() {
+		return labels;
+	}
 }
