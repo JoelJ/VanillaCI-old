@@ -2,16 +2,26 @@ package com.vanillaci.slave;
 
 import com.google.common.collect.ImmutableList;
 import com.vanillaci.master.heartbeat.Heartbeat;
+import com.vanillaci.slave.heartbeat.HeartbeatItem;
 import com.vanillaci.slave.restapi.config.Config;
 import com.vanillaci.slave.util.Confirm;
+import com.vanillaci.slave.util.JsonUtils;
 import com.vanillaci.slave.util.Logger;
+import org.apache.commons.io.IOUtils;
+import org.codehaus.jackson.type.TypeReference;
 import org.quartz.*;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLConnection;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import static org.quartz.JobBuilder.newJob;
 import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
@@ -30,6 +40,7 @@ public class Slave implements Serializable {
 	private final List<String> labels;
 
 	private boolean heartbeating;
+	private boolean online;
 	private Date lastSuccessfulHeartbeat;
 
 	public Slave(String name, URI location, Collection<String> labels) {
@@ -59,6 +70,44 @@ public class Slave implements Serializable {
 	@SuppressWarnings("UnusedDeclaration")
 	public Date getLastSuccessfulHeartbeat() {
 		return lastSuccessfulHeartbeat;
+	}
+
+	@SuppressWarnings("UnusedDeclaration")
+	public boolean isOnline() {
+		return online;
+	}
+
+	/* package */ void heartbeat() {
+		try {
+			URI uri = new URI(location.getScheme(), location.getUserInfo(), location.getHost(), location.getPort(), location.getPath() + "/heartbeat/get", "", location.getFragment());
+			URLConnection urlConnection = uri.toURL().openConnection();
+			urlConnection.connect();
+
+			InputStream inputStream = urlConnection.getInputStream();
+			String response = IOUtils.toString(inputStream, "UTF-8");
+
+			online = true;
+			lastSuccessfulHeartbeat = new Date();
+
+			Map<String, Map<String, HeartbeatItem>> responseMap = JsonUtils.parse(response, new TypeReference<Map<String, Map<String,HeartbeatItem>>>() {});
+			if(responseMap != null) {
+				Map<String, HeartbeatItem> result = responseMap.get("result");
+				if(result != null) {
+					for (Map.Entry<String, HeartbeatItem> entry : result.entrySet()) {
+						log.trace(entry.getKey() + "=>" + entry.getValue());
+					}
+				}
+			}
+		} catch (URISyntaxException e) {
+			log.error("Invalid URI", e);
+			online = false;
+		} catch (MalformedURLException e) {
+			log.error("Invalid URL", e);
+			online = false;
+		} catch (IOException e) {
+			log.error("Failed connection", e);
+			online = false;
+		}
 	}
 
 	/*package*/ void scheduleHeartbeat() {
@@ -103,16 +152,5 @@ public class Slave implements Serializable {
 				"name='" + name + '\'' +
 				", location=" + location +
 				'}';
-	}
-
-	public static class SlaveHeartbeatTask implements Job {
-		@Override
-		public void execute(JobExecutionContext context) throws JobExecutionException {
-			String name = context.getJobDetail().getKey().getName();
-			System.out.println(name);
-			Slave slave = Config.getSlaveRepository().get(name);
-			log.debug("polling " + slave);
-			slave.lastSuccessfulHeartbeat = new Date();
-		}
 	}
 }
