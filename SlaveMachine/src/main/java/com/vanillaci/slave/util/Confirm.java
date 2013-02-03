@@ -1,6 +1,7 @@
 package com.vanillaci.slave.util;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -41,16 +42,29 @@ public class Confirm {
 	}
 
 	/**
-	 * Verifies the given list is not null. If it is null, it returns an empty list.
-	 * @param list The list to verify.
+	 * Verifies the given collection is not null. If it is null, it returns an empty list.
+	 * @param collection The collection to verify.
 	 * @return If null is given, an empty collection is returned. Otherwise, the given collection is returned untouched.
 	 */
-	public static <T> List<T> notNull(List<T> list) {
-		if(list == null) {
+	public static <T> Collection<T> notNull(Collection<T> collection) {
+		if(collection == null) {
 			return Collections.emptyList();
 		}
-		return list;
+		return collection;
 	}
+
+	/**
+	 * Verifies the given list is not null. If it is null, it returns an empty list.
+	 * @param collection The collection to verify.
+	 * @return If null is given, an empty collection is returned. Otherwise, the given collection is returned untouched.
+	 */
+	public static <T> List<T> notNull(List<T> collection) {
+		if(collection == null) {
+			return Collections.emptyList();
+		}
+		return collection;
+	}
+
 
 	public static <K,V> Map<K, V> notNull(Map<K, V> parameters) {
 		if(parameters == null) {
@@ -86,5 +100,23 @@ public class Confirm {
 			return null;
 		}
 		return instanceOf(fieldName, type, value);
+	}
+
+	/**
+	 * Throws an IllegalArgumentException with the fieldName and message in the exception message,
+	 * if the given value is false.
+	 */
+	public static void isFalse(String fieldName, boolean value, String message) {
+		if(value) {
+			throw new IllegalArgumentException(fieldName + " " + message);
+		}
+	}
+
+	/**
+	 * Throws an IllegalArgumentException with the fieldName and message in the exception message,
+	 * if the given value is true.
+	 */
+	public static void isTrue(String fieldName, boolean value, String message) {
+		isFalse(fieldName, !value, message);
 	}
 }

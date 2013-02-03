@@ -1,5 +1,6 @@
 package com.vanillaci.slave.restapi.config;
 
+import com.vanillaci.slave.SlaveRepository;
 import com.vanillaci.slave.exceptions.UnhandledException;
 import com.vanillaci.slave.util.Logger;
 import com.vanillaci.slave.script.ScriptRepository;
@@ -21,6 +22,8 @@ public class Config {
 	private static final Properties properties = new Properties();
 	private static final ScriptRepository scriptRepository;
 	private static final File workspace;
+
+	private static final SlaveRepository slaveRepository;
 
 	static {
 		String vanillaCiConfigPath = System.getenv("VANILLACI_CONFIG");
@@ -55,6 +58,8 @@ public class Config {
 		if(!workspace.exists() && !workspace.mkdirs()) {
 			throw new RuntimeException("Could not create workspace directory: " + workspace.getAbsolutePath());
 		}
+
+		slaveRepository = new SlaveRepository();
 	}
 
 	public static ScriptRepository getScriptRepository() {
@@ -63,5 +68,9 @@ public class Config {
 
 	public static File getWorkspaceDirectory() {
 		return workspace;
+	}
+
+	public static SlaveRepository getSlaveRepository() {
+		return slaveRepository;
 	}
 }
