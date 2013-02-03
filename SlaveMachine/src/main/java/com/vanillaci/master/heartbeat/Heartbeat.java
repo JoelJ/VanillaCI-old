@@ -40,4 +40,15 @@ public class Heartbeat extends HttpServlet {
 			throw new RuntimeException(e);
 		}
 	}
+
+	@Override
+	public void destroy() {
+		super.destroy();
+		try {
+			log.info("Shutting down Heartbeat");
+			SCHEDULER_FACTORY.getScheduler().shutdown(false);
+		} catch (SchedulerException e) {
+			log.error("Error shutting down Heartbeat", e);
+		}
+	}
 }
