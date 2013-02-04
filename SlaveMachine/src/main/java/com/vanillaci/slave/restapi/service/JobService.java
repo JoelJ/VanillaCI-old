@@ -30,6 +30,16 @@ import java.util.Map;
 public class JobService extends BaseServlet {
 	private Map<String, Run> runDb = new HashMap<String, Run>();
 
+	@EndPoint(value="/add", accepts = {HttpMethod.POST})
+	public ServiceResponse add(HttpServletRequest request, HttpServletResponse response) {
+		return new ServiceResponse("add");
+	}
+
+	@EndPoint(value="/remove", accepts = {HttpMethod.DELETE})
+	public ServiceResponse remove(HttpServletRequest request, HttpServletResponse response) {
+		return new ServiceResponse("add");
+	}
+
 	/**
 	 * This endpoint is designed to be used specifically in a machine running as a slave via a request from the master node.
 	 * It runs an arbitrary job with an arbitrary build number both defined in the request.

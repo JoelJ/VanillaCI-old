@@ -56,8 +56,8 @@ public class HeartbeatService extends BaseServlet {
 		return new ServiceResponse(build);
 	}
 
-	@EndPoint(value = "/remove", accepts = HttpMethod.POST)
-	public ServiceResponse reset(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		return new ServiceResponse("hello there");
+	@EndPoint(value = "/remove", accepts = HttpMethod.DELETE)
+	public ServiceResponse remove(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		return new ServiceResponse("remove not implemented yet");
 	}
 }
