@@ -7,6 +7,7 @@ import org.quartz.impl.DirectSchedulerFactory;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 
 /**
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServlet;
  * Date: 12/22/12
  * Time: 4:00 PM
  */
+@WebServlet(name="HeartbeatScheduler", urlPatterns = "/heartbeatScheduler", loadOnStartup = 0)
 public class Heartbeat extends HttpServlet {
 	private static final Logger log = Logger.getLogger(Heartbeat.class);
 
@@ -41,6 +43,7 @@ public class Heartbeat extends HttpServlet {
 		try {
 			log.info("Shutting down Heartbeat");
 			SCHEDULER_FACTORY.getScheduler().shutdown(false);
+			log.info("Done shutting down Heartbeat");
 		} catch (SchedulerException e) {
 			log.error("Error shutting down Heartbeat", e);
 		}
