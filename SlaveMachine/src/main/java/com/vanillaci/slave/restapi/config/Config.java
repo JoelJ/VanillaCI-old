@@ -2,6 +2,7 @@ package com.vanillaci.slave.restapi.config;
 
 import com.vanillaci.slave.SlaveRepository;
 import com.vanillaci.slave.exceptions.UnhandledException;
+import com.vanillaci.slave.job.JobRepository;
 import com.vanillaci.slave.util.Logger;
 import com.vanillaci.slave.script.ScriptRepository;
 import org.apache.commons.io.FileUtils;
@@ -20,10 +21,14 @@ import java.util.Properties;
 public class Config {
 	private static final Logger LOG = Logger.getLogger(Config.class);
 	private static final Properties properties = new Properties();
-	private static final ScriptRepository scriptRepository;
 	private static final File workspace;
 
+	/*
+	 * TODO: these don't belong here at all. They need to be added to servlets via dependency injection
+	 */
+	private static final ScriptRepository scriptRepository;
 	private static final SlaveRepository slaveRepository;
+	private static final JobRepository jobRepository;
 
 	static {
 		String vanillaCiConfigPath = System.getenv("VANILLACI_CONFIG");
@@ -60,6 +65,7 @@ public class Config {
 		}
 
 		slaveRepository = new SlaveRepository();
+		jobRepository = new JobRepository(scriptRepository);
 	}
 
 	public static ScriptRepository getScriptRepository() {
@@ -80,5 +86,9 @@ public class Config {
 
 	public static long getHeartbeatIntervalInMilliseconds() {
 		return Long.parseLong(properties.getProperty("heartbeat.interval", "10000"));
+	}
+
+	public static JobRepository getJobRepository() {
+		return jobRepository;
 	}
 }

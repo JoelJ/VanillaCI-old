@@ -1,11 +1,14 @@
 package com.vanillaci.slave.job;
 
 import com.google.common.collect.ImmutableSet;
+import com.vanillaci.slave.exceptions.JobNotFoundException;
 import com.vanillaci.slave.script.ScriptName;
 import com.vanillaci.slave.script.ScriptRepository;
 import com.vanillaci.slave.util.Confirm;
 
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * User: Joel Johnson
@@ -14,9 +17,11 @@ import java.util.Set;
  */
 public class JobRepository {
 	private final ScriptRepository scriptRepository;
+	private final Map<String, Job> jobs;
 
 	public JobRepository(ScriptRepository scriptRepository) {
 		this.scriptRepository = Confirm.notNull("scriptRepository", scriptRepository);
+		jobs = new ConcurrentHashMap<String, Job>();
 	}
 
 	/**
@@ -38,5 +43,18 @@ public class JobRepository {
 		}
 
 		return missingScripts.build();
+	}
+
+	public void add(Job job) {
+		Confirm.notNull("job", job);
+		jobs.put(job.getName(), job);
+	}
+
+	public Job remove(String name) {
+		Job remove = jobs.remove(name);
+		if(remove == null) {
+			throw new JobNotFoundException(name);
+		}
+		return remove;
 	}
 }

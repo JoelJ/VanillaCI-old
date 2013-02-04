@@ -1,6 +1,7 @@
 package com.vanillaci.slave.restapi.service;
 
 import com.google.common.collect.ImmutableMap;
+import com.vanillaci.slave.job.JobRepository;
 import com.vanillaci.slave.restapi.annotations.EndPoint;
 import com.vanillaci.core.HttpMethod;
 import com.vanillaci.slave.run.Run;
@@ -8,6 +9,7 @@ import com.vanillaci.slave.job.Job;
 import com.vanillaci.slave.restapi.config.Config;
 import com.vanillaci.core.BaseServlet;
 import com.vanillaci.core.ServiceResponse;
+import com.vanillaci.slave.script.ScriptName;
 import com.vanillaci.slave.util.Confirm;
 import com.vanillaci.slave.util.JsonUtils;
 import com.vanillaci.slave.util.RequestUtils;
@@ -20,6 +22,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * User: Joel Johnson
@@ -30,14 +33,31 @@ import java.util.Map;
 public class JobService extends BaseServlet {
 	private Map<String, Run> runDb = new HashMap<String, Run>();
 
+	/**
+	 * Adds a job to the local repository for later use.
+	 * This is an endpoint designed and used specifically for master nodes.
+	 * Items added in this method are persisted and can be executed later on remote slaves via the {@link com.vanillaci.master.restapi.service.QueueService}.
+	 */
 	@EndPoint(value="/add", accepts = {HttpMethod.POST})
-	public ServiceResponse add(HttpServletRequest request, HttpServletResponse response) {
-		return new ServiceResponse("add");
+	public ServiceResponse add(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		Job job = getJobFromRequest(request);
+		JobRepository jobRepository = Config.getJobRepository();
+		Set<ScriptName> missingScriptsForJob = jobRepository.findMissingScriptsForJob(job);
+		if(missingScriptsForJob.size() > 0) {
+			response.setStatus(404);
+			return new ServiceResponse(missingScriptsForJob);
+		} else {
+			jobRepository.add(job);
+			return new ServiceResponse(job);
+		}
 	}
 
 	@EndPoint(value="/remove", accepts = {HttpMethod.DELETE})
 	public ServiceResponse remove(HttpServletRequest request, HttpServletResponse response) {
-		return new ServiceResponse("add");
+		String name = Confirm.notNull("name", request.getParameter("name"));
+		JobRepository jobRepository = Config.getJobRepository();
+		Job job = jobRepository.remove(name);
+		return new ServiceResponse(job);
 	}
 
 	/**
