@@ -10,6 +10,7 @@ import com.vanillaci.core.BaseServlet;
 import com.vanillaci.core.ServiceResponse;
 import com.vanillaci.slave.util.Confirm;
 import com.vanillaci.slave.util.JsonUtils;
+import com.vanillaci.slave.util.RequestUtils;
 import org.codehaus.jackson.type.TypeReference;
 
 import javax.servlet.annotation.WebServlet;
@@ -53,7 +54,7 @@ public class JobService extends BaseServlet {
 	}
 
 	private int getBuildNumberFromRequest(HttpServletRequest request) {
-		return Integer.parseInt(request.getParameter("buildNumber"));
+		return RequestUtils.getInt(request, "buildNumber");
 	}
 
 	private Job getJobFromRequest(HttpServletRequest request) throws IOException {
