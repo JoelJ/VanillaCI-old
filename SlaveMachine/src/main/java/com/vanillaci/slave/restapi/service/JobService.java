@@ -30,6 +30,11 @@ import java.util.Map;
 public class JobService extends BaseServlet {
 	private Map<String, Run> runDb = new HashMap<String, Run>();
 
+	/**
+	 * This endpoint is designed to be used specifically in a machine running as a slave via a request from the master node.
+	 * It runs an arbitrary job with an arbitrary build number both defined in the request.
+	 * The machine that this request runs on will store the result only until the requester gets the result (TODO).
+	 */
 	@EndPoint(value="/execute", accepts = {HttpMethod.POST})
 	public ServiceResponse execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		Job job = getJobFromRequest(request);
